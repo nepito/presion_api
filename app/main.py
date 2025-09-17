@@ -2,7 +2,7 @@ import uuid
 from typing import List, Dict
 
 from fastapi import FastAPI, HTTPException, status
-from schemas import PresionArterialCreate, PresionArterialResponse, PresionArterialUpdate
+from .schema import PresionArterialCreate, PresionArterialResponse, PresionArterialUpdate
 
 # --- Configuración de la Aplicación ---
 app = FastAPI(
