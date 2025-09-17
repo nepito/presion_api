@@ -2,17 +2,13 @@ import uuid
 from typing import List, Dict
 
 from fastapi import FastAPI, HTTPException, status
-from schemas import (
-    PresionArterialCreate,
-    PresionArterialResponse,
-    PresionArterialUpdate
-)
+from schemas import PresionArterialCreate, PresionArterialResponse, PresionArterialUpdate
 
 # --- Configuración de la Aplicación ---
 app = FastAPI(
     title="API de Presión Arterial",
     description="Una API para registrar y consultar lecturas de presión arterial. 🩺❤️",
-    version="1.0.0"
+    version="1.0.0",
 )
 
 # --- Simulación de Base de Datos ---
@@ -23,7 +19,13 @@ db_lecturas: Dict[str, PresionArterialResponse] = {}
 
 # --- Endpoints de la API ---
 
-@app.post("/presiones", response_model=PresionArterialResponse, status_code=status.HTTP_201_CREATED, tags=["Lecturas"])
+
+@app.post(
+    "/presiones",
+    response_model=PresionArterialResponse,
+    status_code=status.HTTP_201_CREATED,
+    tags=["Lecturas"],
+)
 def registrar_lectura(lectura_in: PresionArterialCreate):
     """
     Registra una nueva lectura de presión arterial.
@@ -37,6 +39,7 @@ def registrar_lectura(lectura_in: PresionArterialCreate):
     db_lecturas[lectura_id] = nueva_lectura
     return nueva_lectura
 
+
 @app.get("/presiones", response_model=List[PresionArterialResponse], tags=["Lecturas"])
 def obtener_todas_las_lecturas(skip: int = 0, limit: int = 100):
     """
@@ -45,6 +48,7 @@ def obtener_todas_las_lecturas(skip: int = 0, limit: int = 100):
     """
     lecturas = list(db_lecturas.values())
     return lecturas[skip : skip + limit]
+
 
 @app.get("/presiones/{lectura_id}", response_model=PresionArterialResponse, tags=["Lecturas"])
 def obtener_lectura_por_id(lectura_id: str):
@@ -56,6 +60,7 @@ def obtener_lectura_por_id(lectura_id: str):
     if not lectura:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Lectura no encontrada.")
     return lectura
+
 
 @app.put("/presiones/{lectura_id}", response_model=PresionArterialResponse, tags=["Lecturas"])
 def actualizar_lectura(lectura_id: str, lectura_update: PresionArterialUpdate):
@@ -74,6 +79,7 @@ def actualizar_lectura(lectura_id: str, lectura_update: PresionArterialUpdate):
 
     db_lecturas[lectura_id] = lectura_actualizada
     return lectura_actualizada
+
 
 @app.delete("/presiones/{lectura_id}", status_code=status.HTTP_200_OK, tags=["Lecturas"])
 def eliminar_lectura(lectura_id: str):
